@@ -1,0 +1,47 @@
+# Python Environment & Virtualenvs
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment Configuration & Secrets
+.env
+.env.local
+*.secret
+
+# Database & Storage Artifacts
+*.db
+*.sqlite
+*.sqlite3
+nexuscrm.db
+mlflow.db
+artifacts/
+models/*.pkl
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs & Runtime Files
+logs/
+*.log
+
+# Package Managers
+.uv/
+dist/
+build/
+*.egg-info/
+
+# IDE & OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+docs/
+data/
+

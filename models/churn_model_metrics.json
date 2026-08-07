@@ -1,0 +1,51 @@
+{
+  "model_name": "churn_model",
+  "accuracy": 0.9367,
+  "precision": 0.9,
+  "recall": 0.5143,
+  "f1_score": 0.6545,
+  "auc_roc": 0.9647,
+  "confusion_matrix": {
+    "true_negatives": 263,
+    "false_positives": 2,
+    "false_negatives": 17,
+    "true_positives": 18,
+    "matrix": [
+      [
+        263,
+        2
+      ],
+      [
+        17,
+        18
+      ]
+    ]
+  },
+  "classification_report": {
+    "0": {
+      "precision": 0.9392857142857143,
+      "recall": 0.9924528301886792,
+      "f1-score": 0.9651376146788991,
+      "support": 265.0
+    },
+    "1": {
+      "precision": 0.9,
+      "recall": 0.5142857142857142,
+      "f1-score": 0.6545454545454545,
+      "support": 35.0
+    },
+    "accuracy": 0.9366666666666666,
+    "macro avg": {
+      "precision": 0.9196428571428572,
+      "recall": 0.7533692722371967,
+      "f1-score": 0.8098415346121768,
+      "support": 300.0
+    },
+    "weighted avg": {
+      "precision": 0.9347023809523809,
+      "recall": 0.9366666666666666,
+      "f1-score": 0.9289018626633306,
+      "support": 300.0
+    }
+  }
+}

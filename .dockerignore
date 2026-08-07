@@ -1,0 +1,28 @@
+# Git & VCS
+.git/
+.gitignore
+
+# Python Virtual environments & Cache
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local Database & Secrets
+.env
+*.db
+*.sqlite
+nexuscrm.db
+mlflow.db
+
+# Test & Log Artifacts
+tests/
+.pytest_cache/
+logs/
+*.log
+
+# IDE & Config
+.vscode/
+.idea/
+README.md

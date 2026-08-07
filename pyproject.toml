@@ -1,0 +1,45 @@
+[project]
+name = "nexuscrm"
+version = "0.1.0"
+description = "NexusCRM — Enterprise AI-Powered CRM Platform"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiosqlite>=0.22.1",
+    "alembic>=1.19.0",
+    "bcrypt>=5.0.0",
+    "crewai>=1.6.1",
+    "email-validator>=2.3.0",
+    "faker>=40.36.0",
+    "fastapi>=0.141.1",
+    "httpx>=0.28.1",
+    "langgraph>=1.2.10",
+    "lightgbm>=4.7.0",
+    "llama-index-core>=0.14.23",
+    "loguru>=0.7.3",
+    "mlflow>=3.15.1",
+    "numpy>=2.5.1",
+    "pandas>=2.3.3",
+    "passlib>=1.7.4",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.2",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "python-jose>=3.5.0",
+    "python-multipart>=0.0.32",
+    "qdrant-client>=1.19.0",
+    "rank-bm25>=0.2.2",
+    "scikit-learn>=1.9.0",
+    "sentence-transformers>=5.7.0",
+    "sqlalchemy>=2.0.51",
+    "uvicorn[standard]>=0.52.1",
+    "xgboost>=3.4.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nexuscrm"]
+

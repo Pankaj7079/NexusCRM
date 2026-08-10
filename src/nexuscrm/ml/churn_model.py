@@ -59,12 +59,17 @@ class ChurnPredictionModel:
         return metrics
 
     def load(self):
-        """Load trained model artifact."""
-        if os.path.exists(self.model_path):
-            self.model = joblib.load(self.model_path)
+        """Load trained winning model artifact."""
+        best_path = "models/best_churn_model.pkl"
+        target_path = best_path if os.path.exists(best_path) else self.model_path
+
+        if os.path.exists(target_path):
+            self.model = joblib.load(target_path)
+            logger.info(f"Loaded Churn Model from {target_path}")
         else:
-            logger.warning(f"Model file {self.model_path} not found. Creating fallback model.")
+            logger.warning(f"Model file {target_path} not found. Creating fallback model.")
             self.model = XGBClassifier(n_estimators=10, max_depth=3)
+
 
     def predict(self, feature_dict: Dict[str, Any]) -> Dict[str, Any]:
         """Predict churn score for single customer feature payload."""

@@ -35,6 +35,9 @@
         <button class="nav-item" data-tab="contacts">
           <i class="fa-solid fa-users"></i> Contacts & Leads
         </button>
+        <button class="nav-item" data-tab="deals">
+          <i class="fa-solid fa-handshake"></i> Deals & Pipeline
+        </button>
         <button class="nav-item" data-tab="rag">
           <i class="fa-solid fa-book-bookmark"></i> RAG Knowledge Base
         </button>
@@ -44,11 +47,11 @@
       </nav>
 
       <div class="sidebar-footer">
-        <div class="user-pill">
+        <div class="user-pill" id="user-pill">
           <i class="fa-solid fa-user-shield"></i>
           <div class="user-info">
-            <span class="user-name">Admin User</span>
-            <span class="user-role">System Admin</span>
+            <span class="user-name" id="display-user-name">Admin User</span>
+            <span class="user-role" id="display-user-role">System Admin</span>
           </div>
         </div>
       </div>
@@ -60,8 +63,9 @@
       <header class="topbar">
         <h1 class="page-title" id="page-title">Executive Intelligence Dashboard</h1>
         <div class="topbar-actions">
-          <span class="system-status-badge"><i class="fa-solid fa-circle-check"></i> All Services Operational</span>
-          <button class="btn btn-secondary" id="btn-seed"><i class="fa-solid fa-database"></i> Refresh Data</button>
+          <span class="system-status-badge"><i class="fa-solid fa-circle-check"></i> System Active</span>
+          <button class="btn btn-primary" id="btn-quick-contact"><i class="fa-solid fa-user-plus"></i> + Add Contact</button>
+          <button class="btn btn-secondary" id="btn-quick-deal"><i class="fa-solid fa-plus"></i> + Add Deal</button>
         </div>
       </header>
 
@@ -77,35 +81,35 @@
                 <span>Weighted Pipeline</span>
                 <i class="fa-solid fa-sack-dollar metric-icon gold"></i>
               </div>
-              <div class="metric-value">$450,000</div>
-              <div class="metric-sub positive"><i class="fa-solid fa-arrow-trend-up"></i> +14.2% vs last month</div>
+              <div class="metric-value" id="metric-pipeline">$450,000</div>
+              <div class="metric-sub positive"><i class="fa-solid fa-arrow-trend-up"></i> Live B2B Deals Pipeline</div>
             </div>
 
             <div class="metric-card glass">
               <div class="metric-header">
-                <span>Churn Risk AUC-ROC</span>
+                <span>Best Churn Model AUC</span>
                 <i class="fa-solid fa-shield-cat metric-icon purple"></i>
               </div>
-              <div class="metric-value">96.47%</div>
-              <div class="metric-sub"><i class="fa-solid fa-bolt"></i> XGBoost + SHAP Model</div>
+              <div class="metric-value">97.64%</div>
+              <div class="metric-sub"><i class="fa-solid fa-bolt"></i> Extra Trees Model</div>
             </div>
 
             <div class="metric-card glass">
               <div class="metric-header">
-                <span>Lead Scoring AUC-ROC</span>
+                <span>Best Lead Scorer AUC</span>
                 <i class="fa-solid fa-bullseye metric-icon blue"></i>
               </div>
-              <div class="metric-value">98.87%</div>
-              <div class="metric-sub"><i class="fa-solid fa-layer-group"></i> LightGBM Calibrated</div>
+              <div class="metric-value">97.54%</div>
+              <div class="metric-sub"><i class="fa-solid fa-layer-group"></i> XGBoost Model</div>
             </div>
 
             <div class="metric-card glass">
               <div class="metric-header">
-                <span>RAG Faithfulness Score</span>
-                <i class="fa-solid fa-award metric-icon green"></i>
+                <span>Active Enterprise Contacts</span>
+                <i class="fa-solid fa-users metric-icon green"></i>
               </div>
-              <div class="metric-value">88.0%</div>
-              <div class="metric-sub"><i class="fa-solid fa-check"></i> RAGAS Evaluated</div>
+              <div class="metric-value" id="metric-contacts-count">150</div>
+              <div class="metric-sub"><i class="fa-solid fa-building"></i> Across 50 Indian Companies</div>
             </div>
           </div>
 
@@ -129,7 +133,7 @@
             <div class="agent-dag-panel">
               <h3><i class="fa-solid fa-diagram-project"></i> Agentic Harness DAG</h3>
               <div class="dag-steps" id="dag-steps-list">
-                <div class="dag-step"><i class="fa-solid fa-circle-dot"></i> Idle: Awaiting user task...</div>
+                <div class="dag-step"><i class="fa-solid fa-circle-dot"></i> Idle: Awaiting CRM instruction...</div>
               </div>
             </div>
 
@@ -146,7 +150,7 @@
 
               <!-- Chat Input Box -->
               <div class="chat-input-bar">
-                <input type="text" id="chat-input" placeholder="Type instructions e.g. 'Draft a follow-up email for the enterprise contract renewal'...">
+                <input type="text" id="chat-input" placeholder="Type CRM instructions e.g. 'Draft emergency retention email for high churn accounts'...">
                 <button class="btn btn-primary" id="btn-send-agent"><i class="fa-solid fa-paper-plane"></i> Execute Task</button>
               </div>
             </div>
@@ -158,7 +162,10 @@
           <div class="card glass">
             <div class="card-header">
               <h3><i class="fa-solid fa-users"></i> Contacts & Lead Intelligence</h3>
-              <input type="text" id="contact-search" placeholder="Filter contacts by name or email..." class="search-input">
+              <div class="header-actions">
+                <input type="text" id="contact-search" placeholder="Filter by name or email..." class="search-input">
+                <button class="btn btn-primary btn-sm" id="btn-add-contact-tab"><i class="fa-solid fa-plus"></i> Add Contact</button>
+              </div>
             </div>
             <div class="table-responsive">
               <table class="data-table" id="contacts-table">
@@ -170,7 +177,7 @@
                     <th>Lead Score</th>
                     <th>Churn Risk</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody id="contacts-tbody">
@@ -181,24 +188,45 @@
           </div>
         </section>
 
-        <!-- TAB 4: RAG KNOWLEDGE BASE -->
+        <!-- TAB 4: DEALS & PIPELINE -->
+        <section id="tab-deals" class="tab-content">
+          <div class="card glass">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-handshake"></i> B2B Sales Deals Pipeline</h3>
+              <button class="btn btn-primary btn-sm" id="btn-add-deal-tab"><i class="fa-solid fa-plus"></i> Add New Deal</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table" id="deals-table">
+                <thead>
+                  <tr>
+                    <th>Deal Title</th>
+                    <th>Value ($)</th>
+                    <th>Stage</th>
+                    <th>Win Probability</th>
+                    <th>Close Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="deals-tbody">
+                  <tr><td colspan="6">Loading deals data...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 5: RAG KNOWLEDGE BASE -->
         <section id="tab-rag" class="tab-content">
           <div class="rag-grid">
-            <!-- Upload Panel -->
+            <!-- Document List -->
             <div class="card glass">
               <h3><i class="fa-solid fa-file-arrow-up"></i> Document Ingestion (PageIndex)</h3>
-              <p class="text-muted">Upload PDF or Markdown files to index at page level with metadata.</p>
-              <div class="file-dropzone" id="dropzone">
-                <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
-                <input type="file" id="rag-file-input" accept=".pdf,.txt,.md">
-                <span>Drag & drop file or click to browse</span>
-              </div>
-              <button class="btn btn-secondary mt-3" id="btn-upload-rag"><i class="fa-solid fa-upload"></i> Index Document</button>
-
+              <p class="text-muted">Documents indexed from <code>data/knowledge_base/</code> at page level with metadata.</p>
+              
               <h4 class="mt-4">Indexed Documents</h4>
               <ul class="doc-list" id="doc-list">
-                <li><i class="fa-solid fa-file-pdf"></i> Enterprise_Pricing_Guide_2026.pdf (2 PageIndex Chunks)</li>
-                <li><i class="fa-solid fa-file-pdf"></i> Customer_Support_SLA_and_Escalation.pdf (2 PageIndex Chunks)</li>
+                <li><i class="fa-solid fa-file-lines"></i> Enterprise_Pricing_Guide_2026.txt (2 PageIndex Chunks)</li>
+                <li><i class="fa-solid fa-file-lines"></i> Customer_Support_SLA_and_Escalation.txt (2 PageIndex Chunks)</li>
               </ul>
             </div>
 
@@ -217,24 +245,24 @@
           </div>
         </section>
 
-        <!-- TAB 5: ML INTELLIGENCE -->
+        <!-- TAB 6: ML INTELLIGENCE -->
         <section id="tab-analytics" class="tab-content">
           <div class="card glass">
-            <h3><i class="fa-solid fa-microchip"></i> Machine Learning Model Explorer</h3>
+            <h3><i class="fa-solid fa-microchip"></i> Deployed Machine Learning Models</h3>
             <div class="ml-cards">
               <div class="ml-card">
-                <h4>XGBoost Churn Risk Model</h4>
-                <div class="badge-tag green">AUC-ROC: 0.9647</div>
-                <p>Features: Recency, Sentiment Trajectory, Support Tickets, MRR.</p>
+                <h4>Winning Churn Risk Model (Extra Trees)</h4>
+                <div class="badge-tag green">AUC-ROC: 0.9764</div>
+                <p>Selected via 5-model evaluation. Features: Recency, Sentiment, Support Tickets, MRR.</p>
               </div>
               <div class="ml-card">
-                <h4>LightGBM Lead Scoring Model</h4>
-                <div class="badge-tag blue">AUC-ROC: 0.9887</div>
-                <p>Features: 30d/90d Activity Velocity, Win Probability, NPS.</p>
+                <h4>Winning Lead Scorer Model (XGBoost)</h4>
+                <div class="badge-tag blue">AUC-ROC: 0.9754</div>
+                <p>Selected via 5-model evaluation. Features: Activity Velocity, Win Probability, NPS.</p>
               </div>
               <div class="ml-card">
                 <h4>Prophet Revenue Forecaster</h4>
-                <div class="badge-tag purple">Baseline Mean: $393,774</div>
+                <div class="badge-tag purple">Baseline Mean: $400,542</div>
                 <p>Predicts monthly closed revenue with 80% confidence intervals.</p>
               </div>
             </div>
@@ -245,15 +273,91 @@
     </main>
   </div>
 
+  <!-- ADD CONTACT MODAL -->
+  <div class="modal-overlay" id="contact-modal">
+    <div class="modal-content glass">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-user-plus"></i> Add New Contact</h3>
+        <button class="btn-close" onclick="closeModal('contact-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-add-contact">
+          <div class="form-group mb-2">
+            <label>First Name</label>
+            <input type="text" id="cnt-first-name" class="form-control" required placeholder="e.g. Rahul">
+          </div>
+          <div class="form-group mb-2">
+            <label>Last Name</label>
+            <input type="text" id="cnt-last-name" class="form-control" required placeholder="e.g. Sharma">
+          </div>
+          <div class="form-group mb-2">
+            <label>Email Address</label>
+            <input type="email" id="cnt-email" class="form-control" required placeholder="e.g. rahul.sharma@infosys.com">
+          </div>
+          <div class="form-group mb-2">
+            <label>Job Title</label>
+            <input type="text" id="cnt-job-title" class="form-control" placeholder="e.g. VP of Sales">
+          </div>
+          <div class="form-group mb-2">
+            <label>Phone Number</label>
+            <input type="text" id="cnt-phone" class="form-control" placeholder="+91-9876543210">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('contact-modal')">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-contact">Save Contact</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD DEAL MODAL -->
+  <div class="modal-overlay" id="deal-modal">
+    <div class="modal-content glass">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-handshake"></i> Add New Sales Deal</h3>
+        <button class="btn-close" onclick="closeModal('deal-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-add-deal">
+          <div class="form-group mb-2">
+            <label>Deal Title</label>
+            <input type="text" id="deal-title-input" class="form-control" required placeholder="e.g. Infosys - Cloud Migration">
+          </div>
+          <div class="form-group mb-2">
+            <label>Deal Value ($)</label>
+            <input type="number" id="deal-value-input" class="form-control" required placeholder="e.g. 150000">
+          </div>
+          <div class="form-group mb-2">
+            <label>Sales Stage</label>
+            <select id="deal-stage-input" class="form-control">
+              <option value="PROSPECTING">PROSPECTING</option>
+              <option value="QUALIFICATION">QUALIFICATION</option>
+              <option value="NEEDS_ANALYSIS">NEEDS_ANALYSIS</option>
+              <option value="PROPOSAL">PROPOSAL</option>
+              <option value="NEGOTIATION">NEGOTIATION</option>
+              <option value="CLOSED_WON">CLOSED_WON</option>
+              <option value="CLOSED_LOST">CLOSED_LOST</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('deal-modal')">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-deal">Save Deal</button>
+      </div>
+    </div>
+  </div>
+
   <!-- HITL Modal Popup -->
   <div class="modal-overlay" id="hitl-modal">
     <div class="modal-content glass">
       <div class="modal-header">
         <h3><i class="fa-solid fa-user-check"></i> Human-in-the-Loop (HITL) Gate</h3>
-        <button class="btn-close" id="modal-close">&times;</button>
+        <button class="btn-close" onclick="closeModal('hitl-modal')">&times;</button>
       </div>
       <div class="modal-body">
-        <p>The <strong>CrewAI Sales Crew</strong> generated the following email draft. Review or edit before dispatcing:</p>
+        <p>The <strong>CrewAI Sales Crew</strong> generated the following proposal email draft. Review or edit before dispatching:</p>
         <textarea id="hitl-draft-text" rows="6" class="form-control"></textarea>
       </div>
       <div class="modal-footer">

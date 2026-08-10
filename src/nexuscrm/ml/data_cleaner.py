@@ -1,4 +1,4 @@
-"""Senior ML Engineer Data Cleaning & Preprocessing Pipeline."""
+"""Data cleaning and preprocessing pipeline."""
 
 import os
 import pandas as pd
@@ -9,8 +9,8 @@ from nexuscrm.core.logging import logger
 from nexuscrm.ml.dataset_loader import FEATURE_COLUMNS
 
 
-class SeniorDataCleaner:
-    """Production-grade data cleaning, outlier handling, and imputation engine."""
+class DataCleaner:
+    """Data cleaning, outlier handling, and imputation pipeline."""
 
     def __init__(self):
         self.stats_summary: Dict[str, Any] = {}
@@ -70,4 +70,5 @@ class SeniorDataCleaner:
         return df, cleaning_summary
 
 
-data_cleaner = SeniorDataCleaner()
+data_cleaner = DataCleaner()
+SeniorDataCleaner = DataCleaner

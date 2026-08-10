@@ -1,13 +1,13 @@
 # Performance Report: churn_model
 
-- **Accuracy**: `0.9367`
-- **Precision**: `0.9000`
-- **Recall**: `0.5143`
-- **F1 Score**: `0.6545`
-- **AUC-ROC**: `0.9647`
+- **Accuracy**: `0.9333`
+- **Precision**: `0.8125`
+- **Recall**: `0.6500`
+- **F1 Score**: `0.7222`
+- **AUC-ROC**: `0.9625`
 
 ## Confusion Matrix
 | Actual / Predicted | Negative | Positive |
 |---|---|---|
-| **Negative** | 263 (TN) | 2 (FP) |
-| **Positive** | 17 (FN) | 18 (TP) |
+| **Negative** | 254 (TN) | 6 (FP) |
+| **Positive** | 14 (FN) | 26 (TP) |

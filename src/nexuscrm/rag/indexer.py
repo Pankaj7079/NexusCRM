@@ -101,11 +101,26 @@ global_document_registry: List[Dict[str, Any]] = []
 
 
 def register_sample_documents():
-    """Register sample knowledge base documents on startup."""
-    sample_docs = [
-        {
-            "filename": "Enterprise_Pricing_Guide_2026.pdf",
-            "content": """--- Page 1 ---
+    """Register knowledge base documents from data/knowledge_base/ directory or fallback templates."""
+    kb_dir = os.path.join("data", "knowledge_base")
+    sample_docs = []
+
+    if os.path.exists(kb_dir):
+        for fname in sorted(os.listdir(kb_dir)):
+            fpath = os.path.join(kb_dir, fname)
+            if os.path.isfile(fpath) and fname.endswith((".txt", ".md", ".pdf")):
+                try:
+                    with open(fpath, "r", encoding="utf-8") as f:
+                        content = f.read()
+                    sample_docs.append({"filename": fname, "content": content})
+                except Exception:
+                    pass
+
+    if not sample_docs:
+        sample_docs = [
+            {
+                "filename": "Enterprise_Pricing_Guide_2026.txt",
+                "content": """--- Page 1 ---
 NexusCRM Enterprise Pricing Guide 2026.
 Tier 1: Starter Plan ($49/user/month) - Includes CRM CRUD, Lead Management, Email Integration.
 Tier 2: Professional Plan ($99/user/month) - Adds Agentic Harness, RAG Knowledge Base, Churn Risk Model.
@@ -114,10 +129,10 @@ Tier 3: Enterprise Custom ($199/user/month) - Multi-Agent A2A Collaboration, Ded
 --- Page 2 ---
 Discount Policy: Annual billing grants a 20% flat discount on all tiers.
 Refund Policy: 30-day money back guarantee for all enterprise tier contracts.""",
-        },
-        {
-            "filename": "Customer_Support_SLA_and_Escalation.pdf",
-            "content": """--- Page 1 ---
+            },
+            {
+                "filename": "Customer_Support_SLA_and_Escalation.txt",
+                "content": """--- Page 1 ---
 Support Service Level Agreement (SLA) & Escalation Matrix.
 Priority P1 (Critical): Response within 15 minutes. Resolution within 4 hours.
 Priority P2 (High): Response within 1 hour. Resolution within 24 hours.
@@ -125,10 +140,13 @@ Priority P3 (Normal): Response within 4 hours. Resolution within 48 hours.
 
 --- Page 2 ---
 Escalation Pathway: If a P1 support ticket is not resolved within 2 hours, automatically trigger the TicketTriageAgent and alert the Support Operations Manager.""",
-        },
-    ]
+            },
+        ]
 
     all_nodes = []
+    global_document_registry.clear()
+    vector_store.clear()
+
     for doc in sample_docs:
         nodes = PageIndexChunker.chunk_document(doc["content"], doc["filename"])
         all_nodes.extend(nodes)

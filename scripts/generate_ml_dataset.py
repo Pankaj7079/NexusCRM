@@ -1,6 +1,6 @@
-"""Senior Enterprise CRM Data Generator.
+"""Senior Indian Enterprise CRM Data Generator.
 
-Generates 1,500 realistic enterprise customer profile records with multi-dimensional
+Generates 1,500 realistic Indian enterprise customer profile records with multi-dimensional
 behavioral features and historical revenue time-series data for production ML training.
 """
 
@@ -9,22 +9,35 @@ import numpy as np
 import pandas as pd
 from faker import Faker
 
-fake = Faker()
+fake = Faker('en_IN')
 np.random.seed(42)
 
 NUM_CUSTOMERS = 1500
 
+INDIAN_COMPANIES_POOL = [
+    "Infosys Limited", "TCS", "Wipro Technologies", "HCLTech", "Tech Mahindra",
+    "Reliance Industries", "Jio Platforms", "Razorpay Software", "Zerodha Broking",
+    "Zomato Limited", "Swiggy", "Freshworks India", "Zoho Corporation", "Postman",
+    "Paytm", "PhonePe", "CRED", "Flipkart Enterprise", "Meesho", "InMobi Tech",
+    "Nykaa Retail", "OYO Rooms", "Ola Electric", "Delhivery Logistics", "Pine Labs",
+    "Policybazaar", "Info Edge", "Persistent Systems", "Coforge", "Mphasis",
+    "LTTS", "Cyient", "Titan Company", "Tata Motors", "HDFC Bank", "ICICI Bank",
+    "Axis Bank", "Bharti Airtel", "Sun Pharma", "Dr. Reddy's Lab", "Cipla",
+    "Biocon", "Mahindra & Mahindra", "Bajaj Finserv", "Larsen & Toubro", "Adani Enterprises",
+]
+
 
 def generate_crm_dataset():
-    """Generate senior enterprise CRM customer dataset."""
-    print(f"Generating {NUM_CUSTOMERS} realistic enterprise CRM customer records...")
+    """Generate senior enterprise Indian CRM customer dataset."""
+    print(f"Generating {NUM_CUSTOMERS} realistic Indian enterprise CRM customer records...")
 
-    industries = ["Technology", "Healthcare", "Financial Services", "Manufacturing", "Retail", "Education"]
+    industries = ["IT Services & Consulting", "Fintech & Payments", "SaaS Software", "E-Commerce", "Banking & Finance", "Healthcare & Pharma", "Telecom & Digital"]
     data = []
 
     for i in range(NUM_CUSTOMERS):
-        customer_id = f"CUST-{i+10001}"
-        company_name = fake.company()
+        customer_id = f"CUST-IN-{i+10001}"
+        base_comp = np.random.choice(INDIAN_COMPANIES_POOL)
+        company_name = f"{base_comp} (Unit {fake.city()})"
         industry = np.random.choice(industries)
 
         # Behavioral & Engagement features
@@ -42,11 +55,11 @@ def generate_crm_dataset():
 
         deal_count = max(1, int(np.random.poisson(lam=3.0)))
         deal_win_rate = round(float(np.random.beta(a=4, b=4)), 2)
-        avg_deal_value = round(float(np.random.lognormal(mean=10.5, sigma=0.8)), 2)
+        avg_deal_value = round(float(np.random.lognormal(mean=10.8, sigma=0.8)), 2)
 
         days_as_customer = int(np.random.uniform(30, 1460))
         contract_months_remaining = int(np.random.uniform(0, 24))
-        monthly_recurring_revenue = round(float(np.random.lognormal(mean=8.0, sigma=0.6)), 2)
+        monthly_recurring_revenue = round(float(np.random.lognormal(mean=8.5, sigma=0.6)), 2)
         net_promoter_score = int(min(10, max(1, np.random.normal(loc=7.2, scale=2.0))))
 
         # Domain Logic Target Calculation: Churn Risk Score
@@ -75,7 +88,6 @@ def generate_crm_dataset():
         lead_prob = 1.0 / (1.0 + np.exp(-lead_logits))
         lead_converted_label = 1 if lead_prob > 0.50 else 0
 
-
         data.append({
             "customer_id": customer_id,
             "company_name": company_name,
@@ -101,7 +113,7 @@ def generate_crm_dataset():
     os.makedirs("data", exist_ok=True)
     csv_path = "data/enterprise_crm_dataset.csv"
     df.to_csv(csv_path, index=False)
-    print(f"Saved senior CRM dataset ({len(df)} rows) to {csv_path}.")
+    print(f"Saved Indian enterprise CRM dataset ({len(df)} rows) to {csv_path}.")
     print(f"Churn rate: {df['churn_label'].mean():.2%}, Conversion rate: {df['lead_converted_label'].mean():.2%}")
 
     # Generate 24-Month Monthly Revenue Time Series Data

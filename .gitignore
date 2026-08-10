@@ -45,3 +45,7 @@ Thumbs.db
 docs/
 data/
 
+.agents/
+
+models/
+

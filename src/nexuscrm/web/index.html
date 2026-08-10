@@ -63,9 +63,11 @@
       <header class="topbar">
         <h1 class="page-title" id="page-title">Executive Intelligence Dashboard</h1>
         <div class="topbar-actions">
-          <span class="system-status-badge"><i class="fa-solid fa-circle-check"></i> System Active</span>
-          <button class="btn btn-primary" id="btn-quick-contact"><i class="fa-solid fa-user-plus"></i> + Add Contact</button>
-          <button class="btn btn-secondary" id="btn-quick-deal"><i class="fa-solid fa-plus"></i> + Add Deal</button>
+          <span class="system-status-badge"><span class="status-dot"></span> System Active</span>
+          <!-- Dynamic Context-Aware Header Actions -->
+          <div id="dynamic-header-actions">
+            <!-- Injected dynamically per tab in app.js -->
+          </div>
         </div>
       </header>
 
@@ -81,7 +83,7 @@
                 <span>Weighted Pipeline</span>
                 <i class="fa-solid fa-sack-dollar metric-icon gold"></i>
               </div>
-              <div class="metric-value" id="metric-pipeline">$450,000</div>
+              <div class="metric-value" id="metric-pipeline">$20,500,240.06</div>
               <div class="metric-sub positive"><i class="fa-solid fa-arrow-trend-up"></i> Live B2B Deals Pipeline</div>
             </div>
 
@@ -143,14 +145,14 @@
                 <div class="chat-msg bot">
                   <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
                   <div class="msg-bubble">
-                    Hello! I am your <strong>NexusCRM Orchestrator</strong>. I coordinate between CrewAI Sales & Support Crews via Google A2A protocol and leverage MCP tools to handle sales, support, and analytics workflows.
+                    Hello! I am your <strong>NexusCRM Assistant</strong>. I can query company analytics, search PageIndex RAG knowledge base documents, draft sales proposals, and execute emergency retention workflows via MCP servers.
                   </div>
                 </div>
               </div>
 
               <!-- Chat Input Box -->
               <div class="chat-input-bar">
-                <input type="text" id="chat-input" placeholder="Type CRM instructions e.g. 'Draft emergency retention email for high churn accounts'...">
+                <input type="text" id="chat-input" placeholder="Ask e.g. 'What is tier 3 pricing?' or 'Draft proposal for pankajsingh341035@gmail.com'...">
                 <button class="btn btn-primary" id="btn-send-agent"><i class="fa-solid fa-paper-plane"></i> Execute Task</button>
               </div>
             </div>
@@ -163,8 +165,8 @@
             <div class="card-header">
               <h3><i class="fa-solid fa-users"></i> Contacts & Lead Intelligence</h3>
               <div class="header-actions">
-                <input type="text" id="contact-search" placeholder="Filter by name or email..." class="search-input">
-                <button class="btn btn-primary btn-sm" id="btn-add-contact-tab"><i class="fa-solid fa-plus"></i> Add Contact</button>
+                <input type="text" id="contact-search" placeholder="Filter contacts by name or email..." class="search-input">
+                <button class="btn btn-primary btn-sm" onclick="openModal('contact-modal')"><i class="fa-solid fa-plus"></i> Add Contact</button>
               </div>
             </div>
             <div class="table-responsive">
@@ -193,7 +195,10 @@
           <div class="card glass">
             <div class="card-header">
               <h3><i class="fa-solid fa-handshake"></i> B2B Sales Deals Pipeline</h3>
-              <button class="btn btn-primary btn-sm" id="btn-add-deal-tab"><i class="fa-solid fa-plus"></i> Add New Deal</button>
+              <div class="header-actions">
+                <input type="text" id="deal-search" placeholder="Filter deals by title..." class="search-input">
+                <button class="btn btn-primary btn-sm" onclick="openModal('deal-modal')"><i class="fa-solid fa-plus"></i> Add Deal</button>
+              </div>
             </div>
             <div class="table-responsive">
               <table class="data-table" id="deals-table">
@@ -218,53 +223,179 @@
         <!-- TAB 5: RAG KNOWLEDGE BASE -->
         <section id="tab-rag" class="tab-content">
           <div class="rag-grid">
-            <!-- Document List -->
+            <!-- Document Repository & Dropzone -->
             <div class="card glass">
-              <h3><i class="fa-solid fa-file-arrow-up"></i> Document Ingestion (PageIndex)</h3>
-              <p class="text-muted">Documents indexed from <code>data/knowledge_base/</code> at page level with metadata.</p>
-              
-              <h4 class="mt-4">Indexed Documents</h4>
+              <div class="card-header">
+                <h3><i class="fa-solid fa-folder-open"></i> Document Repository</h3>
+                <span class="badge-tag blue" id="rag-doc-count-badge">2 Files Indexed</span>
+              </div>
+              <p class="text-muted">Drag & drop files to index at page-level with metadata into Qdrant & BM25.</p>
+
+              <div class="file-dropzone" id="dropzone" onclick="document.getElementById('rag-file-input').click()">
+                <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+                <input type="file" id="rag-file-input" accept=".txt,.md,.pdf">
+                <span><strong>Click or Drag & Drop</strong> file to index document</span>
+              </div>
+
+              <h4 class="mt-4" style="font-size:0.9rem; color:var(--text-muted);">Indexed Knowledge Files</h4>
               <ul class="doc-list" id="doc-list">
-                <li><i class="fa-solid fa-file-lines"></i> Enterprise_Pricing_Guide_2026.txt (2 PageIndex Chunks)</li>
-                <li><i class="fa-solid fa-file-lines"></i> Customer_Support_SLA_and_Escalation.txt (2 PageIndex Chunks)</li>
+                <li><i class="fa-solid fa-file-lines" style="color:var(--accent-blue)"></i> Enterprise_Pricing_Guide_2026.txt <span class="badge-tag green">2 Page Chunks</span></li>
+                <li><i class="fa-solid fa-file-lines" style="color:var(--accent-blue)"></i> Customer_Support_SLA_and_Escalation.txt <span class="badge-tag green">2 Page Chunks</span></li>
               </ul>
             </div>
 
-            <!-- Query Panel -->
+            <!-- RAG Query & Search Panel -->
             <div class="card glass">
-              <h3><i class="fa-solid fa-magnifying-glass"></i> Hybrid RAG Search & RAGAS Eval</h3>
-              <div class="input-group">
-                <input type="text" id="rag-query-input" placeholder="Ask knowledge base e.g. 'What are the enterprise pricing tiers?'">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-magnifying-glass"></i> Hybrid RAG Search & RAGAS Eval</h3>
+                <span class="badge-tag green"><i class="fa-solid fa-shield-check"></i> RRF Fused</span>
+              </div>
+
+              <div class="rag-search-box">
+                <input type="text" id="rag-query-input" class="search-input-full" placeholder="Ask knowledge base e.g. 'What are the enterprise pricing tiers?'">
                 <button class="btn btn-primary" id="btn-query-rag"><i class="fa-solid fa-search"></i> Query RAG</button>
               </div>
 
+              <!-- Quick Prompt Sample Chips -->
+              <div class="quick-chips mt-2">
+                <span class="chip" onclick="quickRAGQuery('What are the enterprise pricing tiers?')">Pricing Tiers</span>
+                <span class="chip" onclick="quickRAGQuery('What is the response time for a P1 SLA ticket?')">P1 Support SLA</span>
+                <span class="chip" onclick="quickRAGQuery('What is the annual billing discount policy?')">Annual Discount</span>
+              </div>
+
               <div class="rag-result-box mt-3" id="rag-result-box">
-                <span class="text-muted">Enter a query above to see Reciprocal Rank Fusion (RRF) search results and real-time RAGAS faithfulness scores.</span>
+                <div class="rag-placeholder">
+                  <i class="fa-solid fa-book-open" style="font-size:2rem; color:var(--text-muted); margin-bottom:0.5rem; display:block;"></i>
+                  Enter a query above or click a prompt chip to inspect Reciprocal Rank Fusion (RRF) search results and real-time RAGAS faithfulness scores.
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- TAB 6: ML INTELLIGENCE -->
+        <!-- TAB 6: ML INTELLIGENCE & BENCHMARKS -->
         <section id="tab-analytics" class="tab-content">
-          <div class="card glass">
-            <h3><i class="fa-solid fa-microchip"></i> Deployed Machine Learning Models</h3>
-            <div class="ml-cards">
-              <div class="ml-card">
-                <h4>Winning Churn Risk Model (Extra Trees)</h4>
-                <div class="badge-tag green">AUC-ROC: 0.9764</div>
-                <p>Selected via 5-model evaluation. Features: Recency, Sentiment, Support Tickets, MRR.</p>
+          <!-- 3 Model Summary Grid Cards -->
+          <div class="ml-grid-cards">
+            <div class="ml-card-box glass">
+              <div class="ml-card-header">
+                <span class="ml-card-title">Winning Churn Risk Model</span>
+                <span class="badge-tag green">AUC-ROC: 0.9764</span>
               </div>
-              <div class="ml-card">
-                <h4>Winning Lead Scorer Model (XGBoost)</h4>
-                <div class="badge-tag blue">AUC-ROC: 0.9754</div>
-                <p>Selected via 5-model evaluation. Features: Activity Velocity, Win Probability, NPS.</p>
+              <div class="ml-algo-name"><i class="fa-solid fa-shield-cat"></i> Extra Trees Classifier</div>
+              <div class="ml-metrics-row">
+                <div><span>Accuracy</span><strong>94.5%</strong></div>
+                <div><span>Precision</span><strong>91.2%</strong></div>
+                <div><span>Recall</span><strong>89.6%</strong></div>
+                <div><span>F1-Score</span><strong>90.4%</strong></div>
               </div>
-              <div class="ml-card">
-                <h4>Prophet Revenue Forecaster</h4>
-                <div class="badge-tag purple">Baseline Mean: $400,542</div>
-                <p>Predicts monthly closed revenue with 80% confidence intervals.</p>
+              <p class="ml-features-text">Top Features: Recency, Sentiment Trajectory, Support Tickets, Contract Remaining.</p>
+            </div>
+
+            <div class="ml-card-box glass">
+              <div class="ml-card-header">
+                <span class="ml-card-title">Winning Lead Scorer Model</span>
+                <span class="badge-tag blue">AUC-ROC: 0.9754</span>
               </div>
+              <div class="ml-algo-name"><i class="fa-solid fa-bullseye"></i> XGBoost Classifier</div>
+              <div class="ml-metrics-row">
+                <div><span>Accuracy</span><strong>95.1%</strong></div>
+                <div><span>Precision</span><strong>92.8%</strong></div>
+                <div><span>Recall</span><strong>90.2%</strong></div>
+                <div><span>F1-Score</span><strong>91.5%</strong></div>
+              </div>
+              <p class="ml-features-text">Top Features: Activity Velocity 30d/90d, Win Probability, NPS, Avg Deal Value.</p>
+            </div>
+
+            <div class="ml-card-box glass">
+              <div class="ml-card-header">
+                <span class="ml-card-title">Prophet Revenue Forecaster</span>
+                <span class="badge-tag purple">Mean: $400,542/mo</span>
+              </div>
+              <div class="ml-algo-name"><i class="fa-solid fa-chart-line"></i> Time-Series Prophet</div>
+              <div class="ml-metrics-row">
+                <div><span>Forecast Horizon</span><strong>6 Months</strong></div>
+                <div><span>Confidence</span><strong>80% CI</strong></div>
+                <div><span>Seasonality</span><strong>12 Months</strong></div>
+                <div><span>Tracking</span><strong>MLflow</strong></div>
+              </div>
+              <p class="ml-features-text">Predicts monthly recurring revenue with trend decomposition & confidence bounds.</p>
+            </div>
+          </div>
+
+          <!-- 5-Model Leaderboard Comparison Table -->
+          <div class="card glass mt-4">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-trophy"></i> 5-Model Classification Leaderboard & Benchmarks</h3>
+              <span class="badge-tag green"><i class="fa-solid fa-check-double"></i> MLflow Tracked</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Model Algorithm</th>
+                    <th>Accuracy</th>
+                    <th>Precision</th>
+                    <th>Recall</th>
+                    <th>F1 Score</th>
+                    <th>AUC-ROC</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>🥇 <strong>#1 WINNER</strong></td>
+                    <td><strong>Extra Trees Classifier</strong></td>
+                    <td>0.9450</td>
+                    <td>0.9120</td>
+                    <td>0.8960</td>
+                    <td>0.9040</td>
+                    <td><strong style="color:var(--accent-green)">0.9764</strong></td>
+                    <td><span class="badge-tag green">DEPLOYED (Churn)</span></td>
+                  </tr>
+                  <tr>
+                    <td>🥈 <strong>#2 WINNER</strong></td>
+                    <td><strong>XGBoost Classifier</strong></td>
+                    <td>0.9510</td>
+                    <td>0.9280</td>
+                    <td>0.9020</td>
+                    <td>0.9150</td>
+                    <td><strong style="color:var(--accent-blue)">0.9754</strong></td>
+                    <td><span class="badge-tag blue">DEPLOYED (Leads)</span></td>
+                  </tr>
+                  <tr>
+                    <td>🥉 #3</td>
+                    <td>LightGBM Classifier</td>
+                    <td>0.9380</td>
+                    <td>0.9010</td>
+                    <td>0.8850</td>
+                    <td>0.8928</td>
+                    <td>0.9680</td>
+                    <td><span class="badge-tag blue">EVALUATED</span></td>
+                  </tr>
+                  <tr>
+                    <td>#4</td>
+                    <td>Random Forest Classifier</td>
+                    <td>0.9290</td>
+                    <td>0.8890</td>
+                    <td>0.8710</td>
+                    <td>0.8799</td>
+                    <td>0.9590</td>
+                    <td><span class="badge-tag blue">EVALUATED</span></td>
+                  </tr>
+                  <tr>
+                    <td>#5</td>
+                    <td>Gradient Boosting Classifier</td>
+                    <td>0.9210</td>
+                    <td>0.8780</td>
+                    <td>0.8620</td>
+                    <td>0.8699</td>
+                    <td>0.9510</td>
+                    <td><span class="badge-tag blue">EVALUATED</span></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
@@ -284,19 +415,19 @@
         <form id="form-add-contact">
           <div class="form-group mb-2">
             <label>First Name</label>
-            <input type="text" id="cnt-first-name" class="form-control" required placeholder="e.g. Rahul">
+            <input type="text" id="cnt-first-name" class="form-control" required placeholder="e.g. Pankaj">
           </div>
           <div class="form-group mb-2">
             <label>Last Name</label>
-            <input type="text" id="cnt-last-name" class="form-control" required placeholder="e.g. Sharma">
+            <input type="text" id="cnt-last-name" class="form-control" required placeholder="e.g. Singh">
           </div>
           <div class="form-group mb-2">
             <label>Email Address</label>
-            <input type="email" id="cnt-email" class="form-control" required placeholder="e.g. rahul.sharma@infosys.com">
+            <input type="email" id="cnt-email" class="form-control" required placeholder="e.g. pankajsingh341035@gmail.com">
           </div>
           <div class="form-group mb-2">
             <label>Job Title</label>
-            <input type="text" id="cnt-job-title" class="form-control" placeholder="e.g. VP of Sales">
+            <input type="text" id="cnt-job-title" class="form-control" placeholder="e.g. Head of AI Architecture">
           </div>
           <div class="form-group mb-2">
             <label>Phone Number</label>
@@ -345,6 +476,23 @@
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal('deal-modal')">Cancel</button>
         <button class="btn btn-primary" id="btn-save-deal">Save Deal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEAL REVIEW STRATEGY MODAL -->
+  <div class="modal-overlay" id="deal-review-modal">
+    <div class="modal-content glass">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-robot"></i> Deal Strategy & Execution Review</h3>
+        <button class="btn-close" onclick="closeModal('deal-review-modal')">&times;</button>
+      </div>
+      <div class="modal-body" id="deal-review-body">
+        <p>Loading deal intelligence...</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('deal-review-modal')">Close</button>
+        <button class="btn btn-primary" id="btn-trigger-deal-action"><i class="fa-solid fa-paper-plane"></i> Generate Deal Proposal</button>
       </div>
     </div>
   </div>

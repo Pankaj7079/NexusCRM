@@ -3,169 +3,227 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NexusCRM — Enterprise AI-Powered CRM Platform</title>
-  <!-- Google Fonts: Inter -->
+  <title>NexusCRM — Enterprise CRM Platform</title>
+  <meta name="description" content="NexusCRM: AI-powered CRM with multi-agent orchestration, predictive analytics, and RAG-based knowledge retrieval.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- FontAwesome & Chart.js -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body class="dark-theme">
+<body>
+  <!-- Toast container for notifications -->
+  <div class="toast-container" id="toast-container"></div>
+
   <div class="app-layout">
-    <!-- Sidebar Navigation -->
+    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="brand">
-        <i class="fa-solid fa-brain brand-icon"></i>
+        <i class="fa-solid fa-bolt brand-icon"></i>
         <div class="brand-text">
           <span class="brand-title">NexusCRM <span class="badge-pro">PRO</span></span>
-          <span class="brand-sub">Agentic Intelligence</span>
+          <span class="brand-sub">v2.0 · Enterprise</span>
         </div>
       </div>
 
       <nav class="nav-menu">
         <button class="nav-item active" data-tab="dashboard">
-          <i class="fa-solid fa-chart-pie"></i> Executive Dashboard
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
         </button>
         <button class="nav-item" data-tab="chat">
-          <i class="fa-solid fa-robot"></i> Multi-Agent Workspace
+          <i class="fa-solid fa-message"></i> Agent Console
         </button>
         <button class="nav-item" data-tab="contacts">
-          <i class="fa-solid fa-users"></i> Contacts & Leads
+          <i class="fa-solid fa-users"></i> Contacts
         </button>
         <button class="nav-item" data-tab="deals">
-          <i class="fa-solid fa-handshake"></i> Deals & Pipeline
+          <i class="fa-solid fa-handshake"></i> Deals
         </button>
         <button class="nav-item" data-tab="rag">
-          <i class="fa-solid fa-book-bookmark"></i> RAG Knowledge Base
+          <i class="fa-solid fa-book-bookmark"></i> Knowledge Base
         </button>
         <button class="nav-item" data-tab="analytics">
-          <i class="fa-solid fa-chart-line"></i> ML Intelligence
+          <i class="fa-solid fa-chart-line"></i> Analytics
         </button>
       </nav>
 
       <div class="sidebar-footer">
-        <div class="user-pill" id="user-pill">
-          <i class="fa-solid fa-user-shield"></i>
+        <div class="user-pill">
+          <i class="fa-solid fa-circle-user"></i>
           <div class="user-info">
-            <span class="user-name" id="display-user-name">Admin User</span>
-            <span class="user-role" id="display-user-role">System Admin</span>
+            <span class="user-name" id="display-user-name">Pankaj Singh</span>
+            <span class="user-role" id="display-user-role">Admin</span>
           </div>
         </div>
       </div>
     </aside>
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <main class="main-content">
-      <!-- Top Bar -->
       <header class="topbar">
-        <h1 class="page-title" id="page-title">Executive Intelligence Dashboard</h1>
+        <div class="topbar-left">
+          <h1 class="page-title" id="page-title">Dashboard</h1>
+        </div>
+
+        <div class="cmd-trigger" id="cmd-trigger" onclick="openModal('command-palette')">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>Search or run a command...</span>
+          <kbd>⌘K</kbd>
+        </div>
+
         <div class="topbar-actions">
-          <span class="system-status-badge"><span class="status-dot"></span> System Active</span>
-          <!-- Dynamic Context-Aware Header Actions -->
-          <div id="dynamic-header-actions">
-            <!-- Injected dynamically per tab in app.js -->
-          </div>
+          <span class="system-status-badge"><span class="status-dot"></span> Online</span>
+          <div id="dynamic-header-actions"></div>
         </div>
       </header>
 
-      <!-- View Containers -->
       <div class="content-body">
-        
-        <!-- TAB 1: EXECUTIVE DASHBOARD -->
+
+        <!-- TAB: DASHBOARD -->
         <section id="tab-dashboard" class="tab-content active">
-          <!-- Metrics Grid -->
           <div class="metrics-grid">
-            <div class="metric-card glass">
+            <div class="metric-card">
               <div class="metric-header">
-                <span>Weighted Pipeline</span>
+                <span>Pipeline Value</span>
                 <i class="fa-solid fa-sack-dollar metric-icon gold"></i>
               </div>
-              <div class="metric-value" id="metric-pipeline">$20,500,240.06</div>
-              <div class="metric-sub positive"><i class="fa-solid fa-arrow-trend-up"></i> Live B2B Deals Pipeline</div>
+              <div class="metric-value" id="metric-pipeline">$20,500,240</div>
+              <div class="metric-sub positive"><i class="fa-solid fa-arrow-trend-up"></i> Across all active deals</div>
             </div>
 
-            <div class="metric-card glass">
+            <div class="metric-card">
               <div class="metric-header">
-                <span>Best Churn Model AUC</span>
-                <i class="fa-solid fa-shield-cat metric-icon purple"></i>
+                <span>Best Churn Model</span>
+                <i class="fa-solid fa-shield-halved metric-icon purple"></i>
               </div>
               <div class="metric-value">97.64%</div>
-              <div class="metric-sub"><i class="fa-solid fa-bolt"></i> Extra Trees Model</div>
+              <div class="metric-sub">AUC-ROC · Extra Trees</div>
             </div>
 
-            <div class="metric-card glass">
+            <div class="metric-card">
               <div class="metric-header">
-                <span>Best Lead Scorer AUC</span>
+                <span>Best Lead Scorer</span>
                 <i class="fa-solid fa-bullseye metric-icon blue"></i>
               </div>
               <div class="metric-value">97.54%</div>
-              <div class="metric-sub"><i class="fa-solid fa-layer-group"></i> XGBoost Model</div>
+              <div class="metric-sub">AUC-ROC · XGBoost</div>
             </div>
 
-            <div class="metric-card glass">
+            <div class="metric-card">
               <div class="metric-header">
-                <span>Active Enterprise Contacts</span>
+                <span>Total Contacts</span>
                 <i class="fa-solid fa-users metric-icon green"></i>
               </div>
-              <div class="metric-value" id="metric-contacts-count">150</div>
-              <div class="metric-sub"><i class="fa-solid fa-building"></i> Across 50 Indian Companies</div>
+              <div class="metric-value" id="metric-contacts-count">—</div>
+              <div class="metric-sub">Synced from database</div>
             </div>
           </div>
 
-          <!-- Charts Row -->
+          <!-- Charts -->
           <div class="charts-grid">
-            <div class="card glass">
-              <h3><i class="fa-solid fa-chart-area"></i> Revenue Forecast (Prophet Model)</h3>
-              <canvas id="chart-forecast" height="120"></canvas>
+            <div class="card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-chart-area"></i> Revenue Forecast</h3>
+                <span class="badge-tag purple">6-month projection</span>
+              </div>
+              <canvas id="chart-forecast" height="140"></canvas>
             </div>
-            <div class="card glass">
-              <h3><i class="fa-solid fa-chart-column"></i> Deals Pipeline by Stage</h3>
-              <canvas id="chart-deals" height="120"></canvas>
+            <div class="card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-chart-column"></i> Pipeline by Stage</h3>
+                <span class="badge-tag blue">Current distribution</span>
+              </div>
+              <canvas id="chart-deals" height="140"></canvas>
+            </div>
+          </div>
+
+          <!-- Activity Feed -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-clock-rotate-left"></i> Recent Activity</h3>
+              <span class="badge-tag green"><i class="fa-solid fa-circle" style="font-size:0.45rem"></i> Live</span>
+            </div>
+            <div class="activity-feed" id="activity-feed">
+              <div class="activity-item">
+                <i class="fa-solid fa-paper-plane activity-icon blue"></i>
+                <div class="activity-body">
+                  <span><strong>Proposal sent</strong> to pankajsingh341035@gmail.com via MCP Email Server</span>
+                  <span class="activity-time">Just now</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <i class="fa-solid fa-flask activity-icon purple"></i>
+                <div class="activity-body">
+                  <span><strong>Model evaluation complete</strong> — Extra Trees: 0.9764 AUC, XGBoost: 0.9754 AUC</span>
+                  <span class="activity-time">5m ago</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <i class="fa-solid fa-building activity-icon green"></i>
+                <div class="activity-body">
+                  <span><strong>Infosys deal reviewed</strong> — 88% win probability, $470K value</span>
+                  <span class="activity-time">12m ago</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <i class="fa-solid fa-file-import activity-icon amber"></i>
+                <div class="activity-body">
+                  <span><strong>2 documents indexed</strong> into knowledge base (4 page chunks)</span>
+                  <span class="activity-time">18m ago</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        <!-- TAB 2: MULTI-AGENT WORKSPACE (CHAT & SSE) -->
+        <!-- TAB: AGENT CONSOLE -->
         <section id="tab-chat" class="tab-content">
-          <div class="chat-workspace glass">
-            <!-- Execution Stream Panel -->
+          <div class="chat-workspace">
+            <!-- Execution Log Panel -->
             <div class="agent-dag-panel">
-              <h3><i class="fa-solid fa-diagram-project"></i> Agentic Harness DAG</h3>
+              <h3><i class="fa-solid fa-diagram-project"></i> Execution Log</h3>
+              <p class="text-muted mt-2">Step-by-step trace of agent orchestration.</p>
               <div class="dag-steps" id="dag-steps-list">
-                <div class="dag-step"><i class="fa-solid fa-circle-dot"></i> Idle: Awaiting CRM instruction...</div>
+                <div class="dag-step"><i class="fa-solid fa-circle-dot" style="color:var(--text-tertiary)"></i> Waiting for input...</div>
               </div>
             </div>
 
-            <!-- Chat Container -->
+            <!-- Chat Area -->
             <div class="chat-main">
               <div class="chat-messages" id="chat-messages">
                 <div class="chat-msg bot">
                   <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
                   <div class="msg-bubble">
-                    Hello! I am your <strong>NexusCRM Assistant</strong>. I can query company analytics, search PageIndex RAG knowledge base documents, draft sales proposals, and execute emergency retention workflows via MCP servers.
+                    Hi, I'm your NexusCRM assistant. I can draft proposals, look up deal info, query the knowledge base, or analyze sales data. What would you like to do?
                   </div>
                 </div>
               </div>
 
-              <!-- Chat Input Box -->
+              <!-- Quick Prompts -->
+              <div class="prompt-chips-bar mt-2">
+                <span class="chip" onclick="sendQuickPrompt('Draft proposal for pankajsingh341035@gmail.com')">✉️ Draft proposal</span>
+                <span class="chip" onclick="sendQuickPrompt('What is the latest sell of Infosys?')">📊 Infosys sales</span>
+                <span class="chip" onclick="sendQuickPrompt('What are the enterprise pricing tiers?')">💰 Pricing tiers</span>
+                <span class="chip" onclick="sendQuickPrompt('Analyze sales strategy for deal ICICI Bank Cloud')">📈 ICICI strategy</span>
+              </div>
+
+              <!-- Chat Input -->
               <div class="chat-input-bar">
-                <input type="text" id="chat-input" placeholder="Ask e.g. 'What is tier 3 pricing?' or 'Draft proposal for pankajsingh341035@gmail.com'...">
-                <button class="btn btn-primary" id="btn-send-agent"><i class="fa-solid fa-paper-plane"></i> Execute Task</button>
+                <input type="text" id="chat-input" placeholder="Ask a question or describe a task...">
+                <button class="btn btn-primary" id="btn-send-agent"><i class="fa-solid fa-arrow-up"></i> Send</button>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- TAB 3: CONTACTS & LEADS -->
+        <!-- TAB: CONTACTS -->
         <section id="tab-contacts" class="tab-content">
-          <div class="card glass">
+          <div class="card">
             <div class="card-header">
-              <h3><i class="fa-solid fa-users"></i> Contacts & Lead Intelligence</h3>
+              <h3><i class="fa-solid fa-users"></i> Contacts</h3>
               <div class="header-actions">
-                <input type="text" id="contact-search" placeholder="Filter contacts by name or email..." class="search-input">
+                <input type="text" id="contact-search" placeholder="Search contacts..." class="search-input">
                 <button class="btn btn-primary btn-sm" onclick="openModal('contact-modal')"><i class="fa-solid fa-plus"></i> Add Contact</button>
               </div>
             </div>
@@ -173,9 +231,9 @@
               <table class="data-table" id="contacts-table">
                 <thead>
                   <tr>
-                    <th>Contact Name</th>
+                    <th>Name</th>
                     <th>Email</th>
-                    <th>Job Title</th>
+                    <th>Role</th>
                     <th>Lead Score</th>
                     <th>Churn Risk</th>
                     <th>Status</th>
@@ -183,20 +241,20 @@
                   </tr>
                 </thead>
                 <tbody id="contacts-tbody">
-                  <tr><td colspan="7">Loading contacts data...</td></tr>
+                  <tr><td colspan="7" class="text-center text-muted" style="padding:2rem">Loading contacts...</td></tr>
                 </tbody>
               </table>
             </div>
           </div>
         </section>
 
-        <!-- TAB 4: DEALS & PIPELINE -->
+        <!-- TAB: DEALS -->
         <section id="tab-deals" class="tab-content">
-          <div class="card glass">
+          <div class="card">
             <div class="card-header">
-              <h3><i class="fa-solid fa-handshake"></i> B2B Sales Deals Pipeline</h3>
+              <h3><i class="fa-solid fa-handshake"></i> Deals</h3>
               <div class="header-actions">
-                <input type="text" id="deal-search" placeholder="Filter deals by title..." class="search-input">
+                <input type="text" id="deal-search" placeholder="Search deals..." class="search-input">
                 <button class="btn btn-primary btn-sm" onclick="openModal('deal-modal')"><i class="fa-solid fa-plus"></i> Add Deal</button>
               </div>
             </div>
@@ -204,195 +262,226 @@
               <table class="data-table" id="deals-table">
                 <thead>
                   <tr>
-                    <th>Deal Title</th>
-                    <th>Value ($)</th>
+                    <th>Deal</th>
+                    <th>Value</th>
                     <th>Stage</th>
-                    <th>Win Probability</th>
+                    <th>Win Prob.</th>
                     <th>Close Date</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody id="deals-tbody">
-                  <tr><td colspan="6">Loading deals data...</td></tr>
+                  <tr><td colspan="6" class="text-center text-muted" style="padding:2rem">Loading deals...</td></tr>
                 </tbody>
               </table>
             </div>
           </div>
         </section>
 
-        <!-- TAB 5: RAG KNOWLEDGE BASE -->
+        <!-- TAB: KNOWLEDGE BASE (RAG) -->
         <section id="tab-rag" class="tab-content">
           <div class="rag-grid">
-            <!-- Document Repository & Dropzone -->
-            <div class="card glass">
+            <!-- Documents -->
+            <div class="card">
               <div class="card-header">
-                <h3><i class="fa-solid fa-folder-open"></i> Document Repository</h3>
-                <span class="badge-tag blue" id="rag-doc-count-badge">2 Files Indexed</span>
+                <h3><i class="fa-solid fa-folder-open"></i> Documents</h3>
+                <span class="badge-tag blue" id="rag-doc-count-badge">2 indexed</span>
               </div>
-              <p class="text-muted">Drag & drop files to index at page-level with metadata into Qdrant & BM25.</p>
+              <p class="text-muted">Upload PDF, TXT, or Markdown files. Documents are chunked by page and indexed for hybrid search.</p>
 
               <div class="file-dropzone" id="dropzone" onclick="document.getElementById('rag-file-input').click()">
                 <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
                 <input type="file" id="rag-file-input" accept=".txt,.md,.pdf">
-                <span><strong>Click or Drag & Drop</strong> file to index document</span>
+                <span><strong>Click to upload</strong> or drag and drop</span>
+                <span class="text-muted" style="font-size:0.72rem">PDF, TXT, MD up to 10MB</span>
               </div>
 
-              <h4 class="mt-4" style="font-size:0.9rem; color:var(--text-muted);">Indexed Knowledge Files</h4>
-              <ul class="doc-list" id="doc-list">
-                <li><i class="fa-solid fa-file-lines" style="color:var(--accent-blue)"></i> Enterprise_Pricing_Guide_2026.txt <span class="badge-tag green">2 Page Chunks</span></li>
-                <li><i class="fa-solid fa-file-lines" style="color:var(--accent-blue)"></i> Customer_Support_SLA_and_Escalation.txt <span class="badge-tag green">2 Page Chunks</span></li>
-              </ul>
+              <div class="mt-4">
+                <ul class="doc-list" id="doc-list">
+                  <li><span><i class="fa-solid fa-file-lines"></i> Enterprise_Pricing_Guide_2026.txt</span> <span class="badge-tag green">2 chunks</span></li>
+                  <li><span><i class="fa-solid fa-file-lines"></i> Customer_Support_SLA.txt</span> <span class="badge-tag green">2 chunks</span></li>
+                </ul>
+              </div>
             </div>
 
-            <!-- RAG Query & Search Panel -->
-            <div class="card glass">
+            <!-- Search -->
+            <div class="card">
               <div class="card-header">
-                <h3><i class="fa-solid fa-magnifying-glass"></i> Hybrid RAG Search & RAGAS Eval</h3>
-                <span class="badge-tag green"><i class="fa-solid fa-shield-check"></i> RRF Fused</span>
+                <h3><i class="fa-solid fa-magnifying-glass"></i> Search Knowledge Base</h3>
+                <span class="badge-tag purple">Hybrid retrieval</span>
               </div>
 
               <div class="rag-search-box">
-                <input type="text" id="rag-query-input" class="search-input-full" placeholder="Ask knowledge base e.g. 'What are the enterprise pricing tiers?'">
-                <button class="btn btn-primary" id="btn-query-rag"><i class="fa-solid fa-search"></i> Query RAG</button>
+                <input type="text" id="rag-query-input" class="search-input-full" placeholder="Ask a question about your documents...">
+                <button class="btn btn-primary" id="btn-query-rag"><i class="fa-solid fa-search"></i> Search</button>
               </div>
 
-              <!-- Quick Prompt Sample Chips -->
-              <div class="quick-chips mt-2">
-                <span class="chip" onclick="quickRAGQuery('What are the enterprise pricing tiers?')">Pricing Tiers</span>
-                <span class="chip" onclick="quickRAGQuery('What is the response time for a P1 SLA ticket?')">P1 Support SLA</span>
-                <span class="chip" onclick="quickRAGQuery('What is the annual billing discount policy?')">Annual Discount</span>
+              <div class="quick-chips mt-3">
+                <span class="chip" onclick="quickRAGQuery('What are the enterprise pricing tiers?')">Pricing tiers</span>
+                <span class="chip" onclick="quickRAGQuery('What is the response time for a P1 SLA ticket?')">P1 SLA response</span>
+                <span class="chip" onclick="quickRAGQuery('What is the annual billing discount policy?')">Discount policy</span>
               </div>
 
               <div class="rag-result-box mt-3" id="rag-result-box">
-                <div class="rag-placeholder">
-                  <i class="fa-solid fa-book-open" style="font-size:2rem; color:var(--text-muted); margin-bottom:0.5rem; display:block;"></i>
-                  Enter a query above or click a prompt chip to inspect Reciprocal Rank Fusion (RRF) search results and real-time RAGAS faithfulness scores.
+                <div class="empty-state">
+                  <i class="fa-solid fa-book-open"></i>
+                  <p>Run a search query to see matching document chunks with relevance scores.</p>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- TAB 6: ML INTELLIGENCE & BENCHMARKS -->
+        <!-- TAB: ANALYTICS -->
         <section id="tab-analytics" class="tab-content">
-          <!-- 3 Model Summary Grid Cards -->
+          <!-- Model Summary Cards -->
           <div class="ml-grid-cards">
-            <div class="ml-card-box glass">
+            <div class="ml-card-box">
               <div class="ml-card-header">
-                <span class="ml-card-title">Winning Churn Risk Model</span>
-                <span class="badge-tag green">AUC-ROC: 0.9764</span>
+                <span class="ml-card-title">Churn Prediction</span>
+                <span class="badge-tag green">Best: 0.9764</span>
               </div>
-              <div class="ml-algo-name"><i class="fa-solid fa-shield-cat"></i> Extra Trees Classifier</div>
+              <div class="ml-algo-name"><i class="fa-solid fa-tree"></i> Extra Trees Classifier</div>
               <div class="ml-metrics-row">
                 <div><span>Accuracy</span><strong>94.5%</strong></div>
                 <div><span>Precision</span><strong>91.2%</strong></div>
                 <div><span>Recall</span><strong>89.6%</strong></div>
-                <div><span>F1-Score</span><strong>90.4%</strong></div>
+                <div><span>F1</span><strong>90.4%</strong></div>
               </div>
-              <p class="ml-features-text">Top Features: Recency, Sentiment Trajectory, Support Tickets, Contract Remaining.</p>
+              <p class="ml-features-text">Key features: recency, sentiment trajectory, support tickets, contract duration</p>
             </div>
 
-            <div class="ml-card-box glass">
+            <div class="ml-card-box">
               <div class="ml-card-header">
-                <span class="ml-card-title">Winning Lead Scorer Model</span>
-                <span class="badge-tag blue">AUC-ROC: 0.9754</span>
+                <span class="ml-card-title">Lead Scoring</span>
+                <span class="badge-tag blue">Best: 0.9754</span>
               </div>
               <div class="ml-algo-name"><i class="fa-solid fa-bullseye"></i> XGBoost Classifier</div>
               <div class="ml-metrics-row">
                 <div><span>Accuracy</span><strong>95.1%</strong></div>
                 <div><span>Precision</span><strong>92.8%</strong></div>
                 <div><span>Recall</span><strong>90.2%</strong></div>
-                <div><span>F1-Score</span><strong>91.5%</strong></div>
+                <div><span>F1</span><strong>91.5%</strong></div>
               </div>
-              <p class="ml-features-text">Top Features: Activity Velocity 30d/90d, Win Probability, NPS, Avg Deal Value.</p>
+              <p class="ml-features-text">Key features: activity velocity, win probability, NPS, average deal value</p>
             </div>
 
-            <div class="ml-card-box glass">
+            <div class="ml-card-box">
               <div class="ml-card-header">
-                <span class="ml-card-title">Prophet Revenue Forecaster</span>
-                <span class="badge-tag purple">Mean: $400,542/mo</span>
+                <span class="ml-card-title">Revenue Forecast</span>
+                <span class="badge-tag amber">$400K/mo avg</span>
               </div>
-              <div class="ml-algo-name"><i class="fa-solid fa-chart-line"></i> Time-Series Prophet</div>
+              <div class="ml-algo-name"><i class="fa-solid fa-chart-line"></i> Prophet Time-Series</div>
               <div class="ml-metrics-row">
-                <div><span>Forecast Horizon</span><strong>6 Months</strong></div>
-                <div><span>Confidence</span><strong>80% CI</strong></div>
-                <div><span>Seasonality</span><strong>12 Months</strong></div>
+                <div><span>Horizon</span><strong>6 mo</strong></div>
+                <div><span>Confidence</span><strong>80%</strong></div>
+                <div><span>Seasonality</span><strong>12 mo</strong></div>
                 <div><span>Tracking</span><strong>MLflow</strong></div>
               </div>
-              <p class="ml-features-text">Predicts monthly recurring revenue with trend decomposition & confidence bounds.</p>
+              <p class="ml-features-text">Monthly recurring revenue prediction with trend decomposition</p>
             </div>
           </div>
 
-          <!-- 5-Model Leaderboard Comparison Table -->
-          <div class="card glass mt-4">
+          <!-- Feature Importance -->
+          <div class="card mt-4">
             <div class="card-header">
-              <h3><i class="fa-solid fa-trophy"></i> 5-Model Classification Leaderboard & Benchmarks</h3>
-              <span class="badge-tag green"><i class="fa-solid fa-check-double"></i> MLflow Tracked</span>
+              <h3><i class="fa-solid fa-sliders"></i> Feature Importance (SHAP Values)</h3>
+              <span class="badge-tag blue">Churn model</span>
+            </div>
+            <div class="shap-bars-container">
+              <div class="shap-bar-item">
+                <span class="shap-label">Days Since Last Contact</span>
+                <div class="shap-bar-bg"><div class="shap-bar-fill red" style="width: 82%;">+0.32 ↑ risk</div></div>
+              </div>
+              <div class="shap-bar-item">
+                <span class="shap-label">Sentiment Score (30d)</span>
+                <div class="shap-bar-bg"><div class="shap-bar-fill green" style="width: 74%;">−0.28 ↓ risk</div></div>
+              </div>
+              <div class="shap-bar-item">
+                <span class="shap-label">Open Support Tickets</span>
+                <div class="shap-bar-bg"><div class="shap-bar-fill red" style="width: 65%;">+0.22 ↑ risk</div></div>
+              </div>
+              <div class="shap-bar-item">
+                <span class="shap-label">Monthly Recurring Revenue</span>
+                <div class="shap-bar-bg"><div class="shap-bar-fill blue" style="width: 58%;">−0.18 ↓ risk</div></div>
+              </div>
+              <div class="shap-bar-item">
+                <span class="shap-label">Contract Months Remaining</span>
+                <div class="shap-bar-bg"><div class="shap-bar-fill green" style="width: 50%;">−0.15 ↓ risk</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Model Leaderboard -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-trophy"></i> Model Leaderboard</h3>
+              <span class="badge-tag green">5 models evaluated</span>
             </div>
             <div class="table-responsive">
               <table class="data-table">
                 <thead>
                   <tr>
                     <th>Rank</th>
-                    <th>Model Algorithm</th>
+                    <th>Algorithm</th>
                     <th>Accuracy</th>
                     <th>Precision</th>
                     <th>Recall</th>
-                    <th>F1 Score</th>
+                    <th>F1</th>
                     <th>AUC-ROC</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>🥇 <strong>#1 WINNER</strong></td>
-                    <td><strong>Extra Trees Classifier</strong></td>
+                    <td><strong>#1</strong></td>
+                    <td><strong>Extra Trees</strong></td>
                     <td>0.9450</td>
                     <td>0.9120</td>
                     <td>0.8960</td>
                     <td>0.9040</td>
-                    <td><strong style="color:var(--accent-green)">0.9764</strong></td>
-                    <td><span class="badge-tag green">DEPLOYED (Churn)</span></td>
+                    <td><strong style="color:var(--green)">0.9764</strong></td>
+                    <td><span class="badge-tag green">Deployed</span></td>
                   </tr>
                   <tr>
-                    <td>🥈 <strong>#2 WINNER</strong></td>
-                    <td><strong>XGBoost Classifier</strong></td>
+                    <td><strong>#2</strong></td>
+                    <td><strong>XGBoost</strong></td>
                     <td>0.9510</td>
                     <td>0.9280</td>
                     <td>0.9020</td>
                     <td>0.9150</td>
-                    <td><strong style="color:var(--accent-blue)">0.9754</strong></td>
-                    <td><span class="badge-tag blue">DEPLOYED (Leads)</span></td>
+                    <td><strong style="color:var(--blue)">0.9754</strong></td>
+                    <td><span class="badge-tag blue">Deployed</span></td>
                   </tr>
                   <tr>
-                    <td>🥉 #3</td>
-                    <td>LightGBM Classifier</td>
+                    <td>#3</td>
+                    <td>LightGBM</td>
                     <td>0.9380</td>
                     <td>0.9010</td>
                     <td>0.8850</td>
                     <td>0.8928</td>
                     <td>0.9680</td>
-                    <td><span class="badge-tag blue">EVALUATED</span></td>
+                    <td><span class="badge-tag purple">Evaluated</span></td>
                   </tr>
                   <tr>
                     <td>#4</td>
-                    <td>Random Forest Classifier</td>
+                    <td>Random Forest</td>
                     <td>0.9290</td>
                     <td>0.8890</td>
                     <td>0.8710</td>
                     <td>0.8799</td>
                     <td>0.9590</td>
-                    <td><span class="badge-tag blue">EVALUATED</span></td>
+                    <td><span class="badge-tag purple">Evaluated</span></td>
                   </tr>
                   <tr>
                     <td>#5</td>
-                    <td>Gradient Boosting Classifier</td>
+                    <td>Gradient Boosting</td>
                     <td>0.9210</td>
                     <td>0.8780</td>
                     <td>0.8620</td>
                     <td>0.8699</td>
                     <td>0.9510</td>
-                    <td><span class="badge-tag blue">EVALUATED</span></td>
+                    <td><span class="badge-tag purple">Evaluated</span></td>
                   </tr>
                 </tbody>
               </table>
@@ -404,113 +493,148 @@
     </main>
   </div>
 
+  <!-- COMMAND PALETTE MODAL -->
+  <div class="modal-overlay" id="command-palette">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-magnifying-glass"></i> Command Palette</h3>
+        <button class="btn-close" onclick="closeModal('command-palette')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="cmd-input" class="form-control" placeholder="Type a command or search...">
+        <div class="cmd-list mt-3">
+          <div class="cmd-item" onclick="executeCmdShortcut('Draft proposal for pankajsingh341035@gmail.com')">
+            <i class="fa-solid fa-paper-plane" style="color:var(--blue)"></i>
+            <span>Draft proposal for pankajsingh341035@gmail.com</span>
+          </div>
+          <div class="cmd-item" onclick="executeCmdShortcut('What is the latest sell of Infosys?')">
+            <i class="fa-solid fa-chart-line" style="color:var(--green)"></i>
+            <span>Look up Infosys sales data</span>
+          </div>
+          <div class="cmd-item" onclick="executeCmdShortcut('What are the enterprise pricing tiers?')">
+            <i class="fa-solid fa-book" style="color:var(--purple)"></i>
+            <span>Search knowledge base: pricing tiers</span>
+          </div>
+          <div class="cmd-item" onclick="executeCmdShortcut('Analyze sales strategy for deal ICICI Bank Cloud')">
+            <i class="fa-solid fa-handshake" style="color:var(--amber)"></i>
+            <span>Analyze ICICI Bank deal strategy</span>
+          </div>
+          <div class="cmd-item" onclick="executeCmdShortcut('Show churn risk summary for all contacts')">
+            <i class="fa-solid fa-shield-halved" style="color:var(--red)"></i>
+            <span>Review churn risk across all contacts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ADD CONTACT MODAL -->
   <div class="modal-overlay" id="contact-modal">
-    <div class="modal-content glass">
+    <div class="modal-content">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-user-plus"></i> Add New Contact</h3>
+        <h3><i class="fa-solid fa-user-plus"></i> New Contact</h3>
         <button class="btn-close" onclick="closeModal('contact-modal')">&times;</button>
       </div>
       <div class="modal-body">
         <form id="form-add-contact">
           <div class="form-group mb-2">
             <label>First Name</label>
-            <input type="text" id="cnt-first-name" class="form-control" required placeholder="e.g. Pankaj">
+            <input type="text" id="cnt-first-name" class="form-control" required placeholder="Pankaj">
           </div>
           <div class="form-group mb-2">
             <label>Last Name</label>
-            <input type="text" id="cnt-last-name" class="form-control" required placeholder="e.g. Singh">
+            <input type="text" id="cnt-last-name" class="form-control" required placeholder="Singh">
           </div>
           <div class="form-group mb-2">
-            <label>Email Address</label>
-            <input type="email" id="cnt-email" class="form-control" required placeholder="e.g. pankajsingh341035@gmail.com">
+            <label>Email</label>
+            <input type="email" id="cnt-email" class="form-control" required placeholder="pankaj@example.com">
           </div>
           <div class="form-group mb-2">
             <label>Job Title</label>
-            <input type="text" id="cnt-job-title" class="form-control" placeholder="e.g. Head of AI Architecture">
+            <input type="text" id="cnt-job-title" class="form-control" placeholder="VP of Engineering">
           </div>
           <div class="form-group mb-2">
-            <label>Phone Number</label>
-            <input type="text" id="cnt-phone" class="form-control" placeholder="+91-9876543210">
+            <label>Phone</label>
+            <input type="text" id="cnt-phone" class="form-control" placeholder="+91 98765 43210">
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal('contact-modal')">Cancel</button>
-        <button class="btn btn-primary" id="btn-save-contact">Save Contact</button>
+        <button class="btn btn-primary" id="btn-save-contact"><i class="fa-solid fa-check"></i> Save Contact</button>
       </div>
     </div>
   </div>
 
   <!-- ADD DEAL MODAL -->
   <div class="modal-overlay" id="deal-modal">
-    <div class="modal-content glass">
+    <div class="modal-content">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-handshake"></i> Add New Sales Deal</h3>
+        <h3><i class="fa-solid fa-handshake"></i> New Deal</h3>
         <button class="btn-close" onclick="closeModal('deal-modal')">&times;</button>
       </div>
       <div class="modal-body">
         <form id="form-add-deal">
           <div class="form-group mb-2">
             <label>Deal Title</label>
-            <input type="text" id="deal-title-input" class="form-control" required placeholder="e.g. Infosys - Cloud Migration">
+            <input type="text" id="deal-title-input" class="form-control" required placeholder="Infosys — Cloud Migration">
           </div>
           <div class="form-group mb-2">
-            <label>Deal Value ($)</label>
-            <input type="number" id="deal-value-input" class="form-control" required placeholder="e.g. 150000">
+            <label>Value ($)</label>
+            <input type="number" id="deal-value-input" class="form-control" required placeholder="150000">
           </div>
           <div class="form-group mb-2">
-            <label>Sales Stage</label>
+            <label>Stage</label>
             <select id="deal-stage-input" class="form-control">
-              <option value="PROSPECTING">PROSPECTING</option>
-              <option value="QUALIFICATION">QUALIFICATION</option>
-              <option value="NEEDS_ANALYSIS">NEEDS_ANALYSIS</option>
-              <option value="PROPOSAL">PROPOSAL</option>
-              <option value="NEGOTIATION">NEGOTIATION</option>
-              <option value="CLOSED_WON">CLOSED_WON</option>
-              <option value="CLOSED_LOST">CLOSED_LOST</option>
+              <option value="prospecting">Prospecting</option>
+              <option value="qualification">Qualification</option>
+              <option value="needs_analysis">Needs Analysis</option>
+              <option value="proposal_sent">Proposal Sent</option>
+              <option value="negotiation">Negotiation</option>
+              <option value="closed_won">Closed Won</option>
+              <option value="closed_lost">Closed Lost</option>
             </select>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal('deal-modal')">Cancel</button>
-        <button class="btn btn-primary" id="btn-save-deal">Save Deal</button>
+        <button class="btn btn-primary" id="btn-save-deal"><i class="fa-solid fa-check"></i> Save Deal</button>
       </div>
     </div>
   </div>
 
-  <!-- DEAL REVIEW STRATEGY MODAL -->
+  <!-- DEAL REVIEW MODAL -->
   <div class="modal-overlay" id="deal-review-modal">
-    <div class="modal-content glass">
+    <div class="modal-content">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-robot"></i> Deal Strategy & Execution Review</h3>
+        <h3><i class="fa-solid fa-chart-bar"></i> Deal Review</h3>
         <button class="btn-close" onclick="closeModal('deal-review-modal')">&times;</button>
       </div>
       <div class="modal-body" id="deal-review-body">
-        <p>Loading deal intelligence...</p>
+        <p class="text-muted">Loading deal details...</p>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal('deal-review-modal')">Close</button>
-        <button class="btn btn-primary" id="btn-trigger-deal-action"><i class="fa-solid fa-paper-plane"></i> Generate Deal Proposal</button>
+        <button class="btn btn-primary" id="btn-trigger-deal-action"><i class="fa-solid fa-paper-plane"></i> Generate Proposal</button>
       </div>
     </div>
   </div>
 
-  <!-- HITL Modal Popup -->
+  <!-- HITL APPROVAL MODAL -->
   <div class="modal-overlay" id="hitl-modal">
-    <div class="modal-content glass">
+    <div class="modal-content">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-user-check"></i> Human-in-the-Loop (HITL) Gate</h3>
+        <h3><i class="fa-solid fa-user-check"></i> Review Before Sending</h3>
         <button class="btn-close" onclick="closeModal('hitl-modal')">&times;</button>
       </div>
       <div class="modal-body">
-        <p>The <strong>CrewAI Sales Crew</strong> generated the following proposal email draft. Review or edit before dispatching:</p>
-        <textarea id="hitl-draft-text" rows="6" class="form-control"></textarea>
+        <p>The agent drafted the following email. Review or edit it before sending:</p>
+        <textarea id="hitl-draft-text" rows="8" class="form-control mt-3"></textarea>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="btn-reject-hitl"><i class="fa-solid fa-xmark"></i> Reject Draft</button>
-        <button class="btn btn-success" id="btn-approve-hitl"><i class="fa-solid fa-paper-plane"></i> Approve & Dispatch</button>
+        <button class="btn btn-secondary" id="btn-reject-hitl"><i class="fa-solid fa-xmark"></i> Reject</button>
+        <button class="btn btn-success" id="btn-approve-hitl"><i class="fa-solid fa-paper-plane"></i> Approve & Send</button>
       </div>
     </div>
   </div>

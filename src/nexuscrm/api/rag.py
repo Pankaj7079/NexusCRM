@@ -77,9 +77,23 @@ async def upload_document(
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
 ):
-    """Upload PDF/Markdown document for RAG PageIndex ingestion."""
+    """Upload PDF/Markdown/Text document for RAG PageIndex ingestion."""
     content_bytes = await file.read()
-    content_str = content_bytes.decode("utf-8", errors="ignore")
+    
+    if file.filename.lower().endswith(".pdf"):
+        try:
+            import pypdf
+            import io
+            pdf_reader = pypdf.PdfReader(io.BytesIO(content_bytes))
+            pages_text = []
+            for i, page in enumerate(pdf_reader.pages):
+                text = page.extract_text() or ""
+                pages_text.append(f"--- Page {i+1} ---\n" + text)
+            content_str = "\n\n".join(pages_text)
+        except Exception:
+            content_str = content_bytes.decode("utf-8", errors="ignore")
+    else:
+        content_str = content_bytes.decode("utf-8", errors="ignore")
 
     nodes = PageIndexChunker.chunk_document(content_str, file.filename)
     vector_store.add_nodes(nodes)
@@ -91,7 +105,13 @@ async def upload_document(
         "chunk_count": len(nodes),
         "status": "indexed",
     }
-    global_document_registry.append(doc_meta)
+    # Avoid duplicate document entries
+    if not any(d["filename"] == file.filename for d in global_document_registry):
+        global_document_registry.append(doc_meta)
+    else:
+        for d in global_document_registry:
+            if d["filename"] == file.filename:
+                d["chunk_count"] = len(nodes)
 
     return {"message": "Document ingested successfully", "document": doc_meta}
 
